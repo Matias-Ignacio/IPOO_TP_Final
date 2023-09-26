@@ -68,7 +68,7 @@ function menuGeneral(){
                         viajeBuscar();
                         break;
                     case 13:
-                        //viajeListar();
+                        viajeListar();
                         break;
                     case 14:
                         viajeModificar();
@@ -138,7 +138,7 @@ function seleccionarViaje(){
     global $idViajeActual;
     echo "-------------------------------------------\n";
     mostrarEmpresaActual();
-    //viajeListar();
+    viajeListar();
     $idViajeActual = readline("Seleccione el viaje Actual: ");
     inicializarViaje();
 }
@@ -158,11 +158,15 @@ function mostrarViajeActual(){
 function viajeAgregar(){
     echo "\n----- Agregar un Viaje -----\n";
     $nuevoViaje = new Viaje();
+    $objEmp = new Empresa();
+    $objEmp->Buscar($GLOBALS["idEmpresaActual"]);
+    $objResp = new ResponsableV();
     $des = readline("Destino: ");
     $res = readline("Nro Empleado Responsable: ");
+    $objResp->Buscar($res);
     $max = readline("Cantidad maxima de pasajeros: ");
     $imp = readline("Importe del viaje: ");
-    $nuevoViaje->cargar(0, $des, $max, $GLOBALS["idEmpresaActual"], $res, $imp);
+    $nuevoViaje->cargar(0, $des, $max, $objEmp, $objResp, $imp);
     if ($nuevoViaje->insertar()){
         echo "Viaje agregado con exito...\n";
     }else{
@@ -186,9 +190,10 @@ function viajeBuscar(){
 
 
 
-/*
+/** 
  * Listar VIAJES
  *
+ */
 function viajeListar(){
     echo "\n--------------- Lista de Viajes ----------------\n";
     $colViajes = array();
@@ -197,7 +202,7 @@ function viajeListar(){
     foreach ($colViajes as $via) {
         echo $via;
     }
-}*/
+}
 
 
 

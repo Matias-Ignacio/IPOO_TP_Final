@@ -277,14 +277,16 @@ class Viaje{
 	}
 
     
-     /* 
+     /** 
      * 
      * @param string $idviaje
      * @return array
-     
+     */
 	public function listar($idempresa){
 	    $arregloViajes = null;
 		$base = new BaseDatos();
+        $objEmp = new Empresa();
+        $objResp = new ResponsableV();
 		$consultaSQL = "SELECT * FROM viaje WHERE idempresa = " . $idempresa." ORDER BY vdestino ";
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaSQL)){				
@@ -294,12 +296,11 @@ class Viaje{
 					$id = $registro['idviaje'];
 					$des = $registro['vdestino'];
 					$cmp = $registro['vcantmaxpasajeros'];
-					$idEm = $registro['objEmpresa'];
-                    $nro = $registro['objResponsable'];
-                    $imp = $registro['vimporte'];
-				
+                    $objEmp->Buscar($registro['idempresa']);
+					$objResp->Buscar($registro['rnumeroempleado']);                  
+                    $imp = $registro['vimporte'];				
 					$viaje=new Viaje();
-					$viaje->cargar($id, $des, $cmp, $idEm, $nro, $imp);
+					$viaje->cargar($id, $des, $cmp, $objEmp, $objResp, $imp);
 
                     $pasajero = new Pasajero();
                     $colPasajeros = $pasajero->listar($id);
@@ -314,7 +315,7 @@ class Viaje{
 		 	$this->setmensajeoperacion($base->getError());
 		 }	
 		 return $arregloViajes;
-	}*/
+	}
 
 
 }
