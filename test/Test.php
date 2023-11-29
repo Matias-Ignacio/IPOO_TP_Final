@@ -158,11 +158,15 @@ function mostrarViajeActual(){
 function viajeAgregar(){
     echo "\n----- Agregar un Viaje -----\n";
     $nuevoViaje = new Viaje();
+    $objEmp = new Empresa();
+    $objEmp->Buscar($GLOBALS["idEmpresaActual"]);
+    $objResp = new ResponsableV();
     $des = readline("Destino: ");
     $res = readline("Nro Empleado Responsable: ");
+    $objResp->Buscar($res);
     $max = readline("Cantidad maxima de pasajeros: ");
     $imp = readline("Importe del viaje: ");
-    $nuevoViaje->cargar(0, $des, $max, $GLOBALS["idEmpresaActual"], $res, $imp);
+    $nuevoViaje->cargar(0, $des, $max, $objEmp, $objResp, $imp);
     if ($nuevoViaje->insertar()){
         echo "Viaje agregado con exito...\n";
     }else{
@@ -182,8 +186,13 @@ function viajeBuscar(){
         echo "Error en la busqueda...\n";
     }
 }
-/**
+
+
+
+
+/** 
  * Listar VIAJES
+ *
  */
 function viajeListar(){
     echo "\n--------------- Lista de Viajes ----------------\n";
@@ -194,11 +203,17 @@ function viajeListar(){
         echo $via;
     }
 }
+
+
+
+
 /**
  * Modificar VIAJES
  */
 function viajeModificar(){
     $nuevoViaje = new Viaje();
+    $nuevoResp = new ResponsableV();
+    $nuevaEmp = new Empresa();
     echo "\n----- Modificar un Viaje -----\n";
     $id = readline("Id del viaje: ");
     if ($nuevoViaje->Buscar($id)){
@@ -208,9 +223,10 @@ function viajeModificar(){
         $var = readline("Cantidad maxima de pasajeros: ".$nuevoViaje->getvcantmaxPasajeros()." (ENTER no modifica) ");
         if(!($var == "")){
             $nuevoViaje->setvcantmaxPasajeros($var);}
-        $var = readline("Nro empleado responsable: ".$nuevoViaje->getrnumeroempleado()."  (ENTER no modifica) ");
+        $var = readline("Nro empleado responsable: ".$nuevoViaje->getobjResponsable()->getrnumeroempleado()."  (ENTER no modifica) ");
         if(!($var == "")){
-            $nuevoViaje->setrnumeroempleado($var);}   
+            $nuevoResp->Buscar($var);
+            $nuevoViaje->setobjResponsable($$nuevoResp);}   
         $var = readline("Importe: ".$nuevoViaje->getvimporte()."  (ENTER no modifica) ");
         if(!($var == "")){
             $nuevoViaje->setvimporte($var);}            

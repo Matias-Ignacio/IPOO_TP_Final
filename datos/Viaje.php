@@ -7,7 +7,7 @@ class Viaje{
     private $vdestino;
     private $objResponsable;  //objeto clase ResponsableV
     private $vcantmaxpasajeros;
-    private $objEmpresa;
+    private $objEmpresa; //objeto clase Empresa
     private $vimporte;
     private $colPasajeros ;//arraay de objetos clase Pasajero
     private $mensajeoperacion;
@@ -16,9 +16,9 @@ class Viaje{
         //Metodo constructor de la clase Viaje
         $this->idviaje = 0;
         $this->vdestino = "";
-        $this->objResponsable = new ResponsableV;
+        $this->objResponsable = new ResponsableV();
         $this->vcantmaxpasajeros = 0;
-        $this->objEmpresa = new Empresa;
+        $this->objEmpresa = new Empresa();
         $this->vimporte = 0;
         $this->colPasajeros = array();
         $this->mensajeoperacion = "";
@@ -31,7 +31,7 @@ class Viaje{
     public function getvdestino(){
         return $this->vdestino;
     }
-    public function getObjResponsable(){
+    public function getobjResponsable(){
         return $this->objResponsable;
     }
     public function getvcantmaxPasajeros(){
@@ -56,8 +56,8 @@ class Viaje{
     public function setvdestino($dest){
         $this->vdestino = $dest;
     }
-    public function setrnumeroempleado($resp){
-        $this->objResponsable = $resp;
+    public function setobjResponsable($objResp){
+        $this->objResponsable = $objResp;
     }
     public function setvcantmaxPasajeros($max){
         $this->vcantmaxpasajeros = $max;
@@ -65,8 +65,8 @@ class Viaje{
     public function setColPasajeros($colPasajeros){
         $this->colPasajeros = $colPasajeros;
     }
-    public function setobjEmpresa($var){
-        $this->objEmpresa = $var;
+    public function setobjEmpresa($obj){
+        $this->objEmpresa = $obj;
     }
     public function setvimporte($var){
         $this->vimporte = $var;
@@ -96,17 +96,17 @@ class Viaje{
      * Metodo que modifica los datos del viaje, no la lista de pasajeros
      * @param $cod
      * @param $dest
-     * @param $idEm
-     * @param $resp
+     * @param $objEmp
+     * @param $objResp
      * @param $max
      * @param $imp
      */
-    public function cargar($cod, $dest, $max, $idEm, $resp, $imp){
+    public function cargar($cod, $dest, $max, $objEmp, $objResp, $imp){
         $this->setidviaje($cod);
         $this->setvdestino($dest);
         $this->setvcantmaxPasajeros($max);
-        $this->setobjEmpresa($idEm);
-        $this->setrnumeroempleado($resp);
+        $this->setobjEmpresa($objEmp);
+        $this->setobjResponsable($objResp);
         $this->setvimporte($imp);
     }
     /**
@@ -177,10 +177,11 @@ class Viaje{
         $cadena = "";
         $cadena = "idviaje : ". $this->getidviaje(). "\t".
                 "Destino: ". $this->getvdestino(). "\n".
-                "Numero empleado Responsable: " . $this->getObjResponsable()."\n".
+                "Numero empleado Responsable: " . $this->getobjResponsable()->getrnumeroempleado()."\n".
+                "Nombre: " . $this->getobjResponsable()->getrnombre()." ".$this->getobjResponsable()->getrapellido()."\n".
                 "Cant Maxima Pasajeros: ". $this->getvcantmaxPasajeros(). "\t".
                 "Cantidad de pasajeros actual: " . $this->cantPasajeros(). "\n".
-                "Importe: ". $this->getvimporte() . "\tId Empresa: ". $this->getobjEmpresa().
+                "Importe: ". $this->getvimporte() . "\tEmpresa: ". $this->getobjEmpresa()->getenombre(). 
                 "\n------------------------------------------------\n";
 		return $cadena;
 	}
@@ -216,12 +217,16 @@ class Viaje{
 		$resp= false;
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaSQL)){
-				if($registro=$base->Registro()){					
+				if($registro=$base->Registro()){	
+                    $objEmp = new Empresa();
+                    $objResp = new ResponsableV();				
 				    $this->setidviaje($id);
 					$this->setvdestino($registro['vdestino']);
 					$this->setvcantmaxpasajeros($registro['vcantmaxpasajeros']);
-					$this->setobjEmpresa($registro['objEmpresa']);
-                    $this->setrnumeroempleado($registro['objResponsable']);
+                    $objEmp->Buscar($registro['idempresa']);
+					$this->setobjEmpresa($objEmp);
+                    $objResp->Buscar($registro['rnumeroempleado']);
+                    $this->setobjResponsable($objResp);
                     $this->setvimporte($registro['vimporte']);
 					$resp= true;
 				}						
@@ -242,8 +247,8 @@ class Viaje{
 		$consultaSQL="INSERT INTO viaje(vdestino, vcantmaxpasajeros,objEmpresa,objResponsable,vimporte) 
 				VALUES ('".$this->getvdestino()."',
                 ".$this->getvcantmaxPasajeros().",
-                ".$this->getobjEmpresa().",
-                ".$this->getObjResponsable().",
+                ".$this->getobjEmpresa()->getidempresa().",
+                ".$this->getobjResponsable()->getrnumeroempleado().",
                 ".$this->getvimporte().")";	
 		return $this->realizarconsulta($consultaSQL);
 	}
@@ -256,8 +261,8 @@ class Viaje{
 		$consultaSQL="UPDATE viaje SET 
                 vdestino = '".$this->getvdestino()."',
                 vcantmaxpasajeros = ".$this->getvcantmaxPasajeros().",
-                objEmpresa = ".$this->getobjEmpresa().",
-                objResponsable = ".$this->getObjResponsable().",
+                idempresa = ".$this->getobjEmpresa()->getidempresa().",
+                rnumeroempleado = ".$this->getobjResponsable()->getrnumeroempleado().",
                 vimporte = ".$this->getvimporte()." WHERE idviaje = ". $this->getidviaje();
 		return $this->realizarconsulta($consultaSQL);
 	}
@@ -271,16 +276,18 @@ class Viaje{
         return $this->realizarconsulta($consultaSQL);
 	}
 
-    /**
-     * Devuelve un array con la coleccion de Pasajeros que cumplen la condicion
-     * de pertenecer al mismo viaje
+    
+     /** 
+     * 
      * @param string $idviaje
      * @return array
      */
 	public function listar($objEmpresa){
 	    $arregloViajes = null;
 		$base = new BaseDatos();
-		$consultaSQL = "SELECT * FROM viaje WHERE objEmpresa = " . $objEmpresa." ORDER BY vdestino ";
+        $objEmp = new Empresa();
+        $objResp = new ResponsableV();
+		$consultaSQL = "SELECT * FROM viaje WHERE idempresa = " . $objEmp->getidempresa() ." ORDER BY vdestino ";
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaSQL)){				
 				$arregloViajes = array();
@@ -289,12 +296,11 @@ class Viaje{
 					$id = $registro['idviaje'];
 					$des = $registro['vdestino'];
 					$cmp = $registro['vcantmaxpasajeros'];
-					$idEm = $registro['objEmpresa'];
-                    $nro = $registro['objResponsable'];
-                    $imp = $registro['vimporte'];
-				
+                    $objEmp->Buscar($registro['idempresa']);
+					$objResp->Buscar($registro['rnumeroempleado']);                  
+                    $imp = $registro['vimporte'];				
 					$viaje=new Viaje();
-					$viaje->cargar($id, $des, $cmp, $idEm, $nro, $imp);
+					$viaje->cargar($id, $des, $cmp, $objEmp, $objResp, $imp);
 
                     $pasajero = new Pasajero();
                     $colPasajeros = $pasajero->listar($id);
