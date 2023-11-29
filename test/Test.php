@@ -49,31 +49,31 @@ function menuGeneral(){
                     echo "\n\t************** GESTIONAR EMPRESA **************\n";
                 }  
                 do{
-                    echo "\t\t(A)gregar\n";
-                    echo "\t\t(B)uscar\n";
-                    echo "\t\t(L)istar\n";
-                    echo "\t\t(M)odificar\n";
-                    echo "\t\t(E)liminar\n\n";
-                    echo "\t\t(V)olver al Menu Principal\n";
+                    echo "\t\t(1)Agregar\n";
+                    echo "\t\t(2)Buscar\n";
+                    echo "\t\t(3)Listar\n";
+                    echo "\t\t(4)Modificar\n";
+                    echo "\t\t(5)Eliminar\n\n";
+                    echo "\t\t(0)Volver al Menu Principal\n";
                     echo "\t***********************************************\n";
                     echo "\tIngrese una opción del menú: ";
                     $op2 = trim(fgets(STDIN));
-                }while (!($op2=="a" && $op2=="b"&& $op2=="l"&& $op2=="m"&& $op2=="e"));
-                $op2 .= $op1;
+                }while (!($op2 >= 0 && $op2 < 6));
+                $op2 = $op1 + $op2;
                 switch ($op2) {
-                    case "a10":
+                    case 11:
                         viajeAgregar();
                         break;
-                    case "b10":
+                    case 12:
                         viajeBuscar();
                         break;
-                    case "l10":
+                    case 13:
                         viajeListar();
                         break;
-                    case "m10":
+                    case 14:
                         viajeModificar();
                         break;  
-                    case "e10":
+                    case 15:
                         viajeEliminar();
                         break;
                     case 21:
@@ -200,8 +200,6 @@ function viajeListar(){
     $nuevoViaje = new Viaje();
     $colViajes = $nuevoViaje->listar($GLOBALS["idEmpresaActual"]);
     foreach ($colViajes as $via) {
-        
-        echo "Algo";
         echo $via;
     }
 }
