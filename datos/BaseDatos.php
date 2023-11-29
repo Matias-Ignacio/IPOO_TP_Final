@@ -81,7 +81,7 @@ class BaseDatos {
      * Devuelve un registro retornado por la ejecucion de una consulta
      * el puntero se despleza al siguiente registro de la consulta
      *
-     * @return boolean
+     * @return array
      */
     public function Registro() {
         $resp = null;

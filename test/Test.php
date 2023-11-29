@@ -200,6 +200,8 @@ function viajeListar(){
     $nuevoViaje = new Viaje();
     $colViajes = $nuevoViaje->listar($GLOBALS["idEmpresaActual"]);
     foreach ($colViajes as $via) {
+        
+        echo "Algo";
         echo $via;
     }
 }

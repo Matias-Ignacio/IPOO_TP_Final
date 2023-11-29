@@ -209,7 +209,7 @@ class Viaje{
 	/**
 	 * Recupera los datos de un viaje por el id
 	 * @param int $id
-	 * @return true en caso de encontrar los datos, false en caso contrario 
+	 * @return boolean true en caso de encontrar los datos, false en caso contrario 
 	 */		
     public function Buscar($id){
 		$base=new BaseDatos();

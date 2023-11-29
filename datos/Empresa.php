@@ -75,7 +75,7 @@ class Empresa{
     	/**
 	 * Recupera los datos de una empresa por idempresa
 	 * @param int $nro
-	 * @return true en caso de encontrar los datos, false en caso contrario 
+	 * @return boolean true en caso de encontrar los datos, false en caso contrario 
 	 */		
     public function Buscar($nro){
 		$base=new BaseDatos();
