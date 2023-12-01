@@ -5,8 +5,8 @@ class Viaje{
     // la cantidad maxima de pasajeros y un array de objetos clase Pasajero
     private $idviaje;
     private $vdestino;
-    private $objResponsable;  //objeto clase ResponsableV
     private $vcantmaxpasajeros;
+    private $objResponsable;  //objeto clase ResponsableV
     private $objEmpresa; //objeto clase Empresa
     private $vimporte;
     private $colPasajeros ;//arraay de objetos clase Pasajero
@@ -16,8 +16,8 @@ class Viaje{
         //Metodo constructor de la clase Viaje
         $this->idviaje = 0;
         $this->vdestino = "";
-        $this->objResponsable = new ResponsableV();
         $this->vcantmaxpasajeros = 0;
+        $this->objResponsable = new ResponsableV();
         $this->objEmpresa = new Empresa();
         $this->vimporte = 0;
         $this->colPasajeros = array();
@@ -31,18 +31,18 @@ class Viaje{
     public function getvdestino(){
         return $this->vdestino;
     }
+    public function getvcantmaxPasajeros(){
+        return $this->vcantmaxpasajeros;
+    }
     public function getobjResponsable(){
         return $this->objResponsable;
     }
-    public function getvcantmaxPasajeros(){
-        return $this->vcantmaxpasajeros;
+    public function getobjEmpresa(){
+        return $this->objEmpresa;
     }
     public function getColPasajeros(){
         return $this->colPasajeros;
     } 
-    public function getobjEmpresa(){
-        return $this->objEmpresa;
-    }
     public function getvimporte(){
         return $this->vimporte;
     }
@@ -56,17 +56,17 @@ class Viaje{
     public function setvdestino($dest){
         $this->vdestino = $dest;
     }
-    public function setobjResponsable($objResp){
-        $this->objResponsable = $objResp;
-    }
     public function setvcantmaxPasajeros($max){
         $this->vcantmaxpasajeros = $max;
     }
-    public function setColPasajeros($colPasajeros){
-        $this->colPasajeros = $colPasajeros;
+    public function setobjResponsable($objResp){
+        $this->objResponsable = $objResp;
     }
     public function setobjEmpresa($obj){
         $this->objEmpresa = $obj;
+    }
+    public function setColPasajeros($colPasajeros){
+        $this->colPasajeros = $colPasajeros;
     }
     public function setvimporte($var){
         $this->vimporte = $var;
@@ -244,7 +244,7 @@ class Viaje{
      */
     public function insertar(){
 
-		$consultaSQL="INSERT INTO viaje(vdestino, vcantmaxpasajeros,objEmpresa,objResponsable,vimporte) 
+		$consultaSQL="INSERT INTO viaje(vdestino, vcantmaxpasajeros, idempresa, rnumeroempleado, vimporte) 
 				VALUES ('".$this->getvdestino()."',
                 ".$this->getvcantmaxPasajeros().",
                 ".$this->getobjEmpresa()->getidempresa().",
