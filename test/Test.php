@@ -14,10 +14,10 @@ $idEmpresaActual = 1;
  */
 function menuGeneral(){
     $objViajeActual = new Viaje();
-    $objViajeActual->buscar(1);
-    $objViajeActual = inicializarViaje($objViajeActual);
+   // $objViajeActual->buscar(1);
+   // $objViajeActual = inicializarViaje($objViajeActual);
     $objEmpresaActual = new Empresa();
-    $objEmpresaActual = $objViajeActual->getobjEmpresa();
+    $objEmpresaActual->buscar(1);
     do{
         do{
         echo "\n\t**************  MENU PRINCIPAL  ***************\n
@@ -44,6 +44,8 @@ function menuGeneral(){
                     mostrarEmpresaActual($objEmpresaActual);
                 }elseif ($op1==20){
                     echo "\n\t************* GESTIONAR PASAJERO **************\n";
+                    if($objViajeActual->getidviaje() == 0){
+                        $objViajeActual = seleccionarViaje($objEmpresaActual);}
                     mostrarViajeActual($objViajeActual);
                 }elseif ($op1==30){
                     echo "\n\t************ GESTIONAR RESPONSABLE ************\n";
@@ -80,6 +82,7 @@ function menuGeneral(){
                         viajeEliminar();
                         break;
                     case 21:
+                        
                         pasajeroAgregar($objViajeActual);
                         break;
                     case 22:
@@ -210,9 +213,7 @@ function viajeListar($objEmpresa){
     $colViajes = array();
     $nuevoViaje = new Viaje();
     $colViajes = $nuevoViaje->listar($objEmpresa);
-    var_dump($colViajes);
     foreach ($colViajes as $viaje) {
-        echo "ALGO";
         echo $viaje;
     }
 }
@@ -465,7 +466,7 @@ function seleccionarEmpresa(){
 }
 /**
  * Mostrar la empresa actual
- * @param int $idEmpresa
+ * @param Empresa $objEmpresa
  */
 function mostrarEmpresaActual($objEmpresa){
     echo "\nEmpresa Actual... \n". $objEmpresa. "\n";

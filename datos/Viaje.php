@@ -285,7 +285,6 @@ class Viaje{
 	public function listar($objEmp){
 	    $arregloViajes = null;
 		$base = new BaseDatos();
-        $objEmp = new Empresa();
         $objResp = new ResponsableV();
 		$consultaSQL = "SELECT * FROM viaje WHERE idempresa = " . $objEmp->getidempresa() ." ORDER BY vdestino ";
 		if($base->Iniciar()){
