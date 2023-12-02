@@ -7,14 +7,17 @@ include_once '../datos/Empresa.php';
 
 
 $idEmpresaActual = 1;
-$objViajeActual = new Viaje();
-$objViajeActual->setidviaje(1);
-$objViajeActual = inicializarViaje($objViajeActual);
+
 
 /**
  * Visualiza el menu de opciones en la pantalla
  */
 function menuGeneral(){
+    $objViajeActual = new Viaje();
+    $objViajeActual->buscar(1);
+    $objViajeActual = inicializarViaje($objViajeActual);
+    $objEmpresaActual = new Empresa();
+    $objEmpresaActual = $objViajeActual->getobjEmpresa();
     do{
         do{
         echo "\n\t**************  MENU PRINCIPAL  ***************\n
@@ -30,7 +33,7 @@ function menuGeneral(){
         $op1 = trim(fgets(STDIN));
         }while (!($op1 >= 0 && $op1 < 7));
         if($op1 == 5){
-            $objViajeActual = seleccionarViaje();
+            $objViajeActual = seleccionarViaje($objEmpresaActual);
         }elseif($op1 == 6){
             $idEmpresaActual = seleccionarEmpresa();
         }elseif (!($op1 == 0)){
@@ -38,13 +41,13 @@ function menuGeneral(){
             do{
                 if ($op1==10){
                     echo "\n\t*************** GESTIONAR VIAJE ***************\n";
-                    mostrarEmpresaActual($idEmpresaActual);
+                    mostrarEmpresaActual($objEmpresaActual);
                 }elseif ($op1==20){
                     echo "\n\t************* GESTIONAR PASAJERO **************\n";
                     mostrarViajeActual($objViajeActual);
                 }elseif ($op1==30){
                     echo "\n\t************ GESTIONAR RESPONSABLE ************\n";
-                    mostrarEmpresaActual($idEmpresaActual);
+                    mostrarEmpresaActual($objEmpresaActual);
                 }elseif ($op1==40){
                     echo "\n\t************** GESTIONAR EMPRESA **************\n";
                 }  
@@ -68,7 +71,7 @@ function menuGeneral(){
                         viajeBuscar();
                         break;
                     case 13:
-                        viajeListar();
+                        viajeListar($objEmpresaActual);
                         break;
                     case 14:
                         viajeModificar();
@@ -77,13 +80,13 @@ function menuGeneral(){
                         viajeEliminar();
                         break;
                     case 21:
-                        pasajeroAgregar();
+                        pasajeroAgregar($objViajeActual);
                         break;
                     case 22:
                         pasajeroBuscar();
                         break;
                     case 23:
-                        pasajeroListar();
+                        pasajeroListar($objViajeActual);
                         break;
                     case 24:
                         pasajeroModificar();
@@ -133,14 +136,17 @@ function menuGeneral(){
 // ************************** GESTION VIAJE *********************************************
 /**
  * Identificar el viaje con el idviaje para gestionar los pasajeros
+ * @param Empresa $objEmpresa
  * @return Viaje
  */
-function seleccionarViaje(){
+function seleccionarViaje($objEmpresa){
     echo "-------------------------------------------\n";
-    mostrarEmpresaActual();
-    viajeListar();
-    $idViaje = readline("Seleccione el id del viaje Actual: ");
-    $objViaje = inicializarViaje($objViajeActual);
+    mostrarEmpresaActual($objEmpresa);
+    viajeListar($objEmpresa);
+    $idViaje = readline("Seleccione el id del viaje: ");
+    $objViaje = new Viaje();
+    $objViaje->buscar($idViaje);
+    $objViaje = inicializarViaje($objViaje);
     return $objViaje;
 }
 /**
@@ -197,15 +203,17 @@ function viajeBuscar(){
 
 /** 
  * Listar VIAJES
- *
+ * @param Empresa $objEmpresa
  */
-function viajeListar(){
+function viajeListar($objEmpresa){
     echo "\n--------------- Lista de Viajes ----------------\n";
     $colViajes = array();
     $nuevoViaje = new Viaje();
-    $colViajes = $nuevoViaje->listar($GLOBALS["idEmpresaActual"]);
-    foreach ($colViajes as $via) {
-        echo $via;
+    $colViajes = $nuevoViaje->listar($objEmpresa);
+    var_dump($colViajes);
+    foreach ($colViajes as $viaje) {
+        echo "ALGO";
+        echo $viaje;
     }
 }
 
@@ -268,7 +276,7 @@ function viajeEliminar(){
 // ************************** GESTION PASAJERO ********************************************
 /**
  * Agregar PASAJEROS a la base de datos
- * @param Viaje
+ * @param Viaje $objViaje
  * @return Viaje
  */
 function pasajeroAgregar($objViaje){
@@ -282,7 +290,7 @@ function pasajeroAgregar($objViaje){
         $ape = readline("Apellido: ");
         $nro = readline("D.N.I.: ");
         $tel = readline("Telefono: ");
-        $nuevoPasajero->cargar($nro,$nom,$ape,$tel,$objViaje-getidviaje());
+        $nuevoPasajero->cargar($nro,$nom,$ape,$tel,$objViaje->getidviaje());
         if ($nuevoPasajero->insertar()){
             $objViaje->setAgregarPasajero($nuevoPasajero);
             echo "Pasajero agregado con exito...\n";
@@ -292,6 +300,7 @@ function pasajeroAgregar($objViaje){
     }else{
         readline("No hay espacio en este viaje");
     }
+    return $objViaje;
 }
 /**
  * Menu Buscar PASAJERO
@@ -458,24 +467,22 @@ function seleccionarEmpresa(){
  * Mostrar la empresa actual
  * @param int $idEmpresa
  */
-function mostrarEmpresaActual($idEmpresa){
-    $empresaNueva = new Empresa();
-    $empresaNueva->Buscar($idEmpresa);
-    echo "\nEmpresa Actual... \n". $empresaNueva. "\n";
+function mostrarEmpresaActual($objEmpresa){
+    echo "\nEmpresa Actual... \n". $objEmpresa. "\n";
 }
 /**
  * Agregar una EMPRESA a la base de datos
  */
 function empresaAgregar(){
     echo "\n----- Agregar una Empresa -----\n";
-    $nuevoResponsable = new Empresa();
+    $objEmpresa = new Empresa();
     $nom = readline("Nombre de la Empresa: ");
     $dir = readline("Direccion: ");
-    $nuevoResponsable->cargar(0,$nom,$dir);
-    if ($nuevoResponsable->insertar()){
+    $objEmpresa->cargar(0,$nom,$dir);
+    if ($objEmpresa->insertar()){
         echo "Empresa agregada con exito...\n";
     }else{
-        echo "Error en la operacion " . $nuevoResponsable->getmensajeoperacion() ."\n";
+        echo "Error en la operacion " . $objEmpresa->getmensajeoperacion() ."\n";
     }
 }
 /**

@@ -279,10 +279,10 @@ class Viaje{
     
      /** 
      * 
-     * @param string $idviaje
+     * @param Empresa $objEmp
      * @return array
      */
-	public function listar($objEmpresa){
+	public function listar($objEmp){
 	    $arregloViajes = null;
 		$base = new BaseDatos();
         $objEmp = new Empresa();
