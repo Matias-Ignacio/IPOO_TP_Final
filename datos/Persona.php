@@ -33,7 +33,7 @@ class Persona{
     //Metodo para mostrar los datos de los atributos como string
     public function __toString(){
         $cadena = "";
-        $cadena = " " . $this->getnombre()." ".$this->getapellido()." ";
+        $cadena = $this->getnombre()." ".$this->getapellido()." ";
         return $cadena;
     }    
 

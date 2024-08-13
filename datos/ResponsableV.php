@@ -36,9 +36,9 @@ class ResponsableV extends Persona{
     //Metodo para mostrar los datos de los atributos como string
     public function __toString(){
         $cadena = "";
-        $cadena = "Responsable del viaje: ". $this->getnombre()." ".$this->getapellido().
-        "\tNro Empleado: ".$this->getrnumeroempleado().
-        "\t Numero de licencia: ".$this->getrnumerolicencia().
+        $cadena = "Responsable del viaje: ". parent::__toString() .
+        "\nNro Empleado: ".$this->getrnumeroempleado().
+        "\nNumero de licencia: ".$this->getrnumerolicencia().
         "\n-----------------------------------------------\n";
         return $cadena;
     }

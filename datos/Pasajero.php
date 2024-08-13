@@ -38,7 +38,7 @@ class Pasajero extends Persona{
     //Metodo para mostrar los datos de los atributos como string
     public function __toString(){
         $cadena = "";
-        $cadena = "Pasajero: ". $this->getnombre()." ".$this->getapellido()."\nDNI: ".$this->getpdocumento().
+        $cadena = "Pasajero: ". parent::__toString() ."\nDNI: ".$this->getpdocumento().
         "\nTel: ".$this->getptelefono() . 
         "\n------------------------------------------\n";
         return $cadena;
