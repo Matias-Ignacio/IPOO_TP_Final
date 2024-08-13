@@ -337,12 +337,12 @@ function pasajeroModificar(){
     echo "\n----- Modificar un Pasajero -----\n";
     $var = readline("DNI: ");
     if ($nuevoPasajero->Buscar($var)){
-        $var = readline("Nombre: ".$nuevoPasajero->getpnombre()." (ENTER no modifica) ");
+        $var = readline("Nombre: ".$nuevoPasajero->getnombre()." (ENTER no modifica) ");
         if(!($var == "")){
-            $nuevoPasajero->setpnombre($var);}
-        $var = readline("Apellido: ".$nuevoPasajero->getpapellido()." (ENTER no modifica) ");
+            $nuevoPasajero->setnombre($var);}
+        $var = readline("Apellido: ".$nuevoPasajero->getapellido()." (ENTER no modifica) ");
         if(!($var == "")){
-            $nuevoPasajero->setpapellido($var);}
+            $nuevoPasajero->setapellido($var);}
         $var = readline("Telefono: ".$nuevoPasajero->getptelefono()." (ENTER no modifica) ");
         if(!($var == "")){
             $nuevoPasajero->setptelefono($var);
@@ -421,12 +421,12 @@ function responsableModificar(){
     echo "\n----- Modificar un Responsable de viajes -----\n";
     $var = readline("Nro Empleado: ");
     if ($nuevoRes->Buscar($var)){
-        $var = readline("Nombre: ".$nuevoRes->getrnombre()." (ENTER no modifica) ");
+        $var = readline("Nombre: ".$nuevoRes->getnombre()." (ENTER no modifica) ");
         if(!($var == "")){
-            $nuevoRes->setrnombre($var);}
-        $var = readline("Apellido: ".$nuevoRes->getrapellido()." (ENTER no modifica) ");
+            $nuevoRes->setnombre($var);}
+        $var = readline("Apellido: ".$nuevoRes->getapellido()." (ENTER no modifica) ");
         if(!($var == "")){
-            $nuevoRes->setrapellido($var);}
+            $nuevoRes->setapellido($var);}
         $var = readline("Licencia: ".$nuevoRes->getrnumerolicencia()." (ENTER no modifica) ");
         if(!($var == "")){
             $nuevoRes->setrnumerolicencia($var);}             

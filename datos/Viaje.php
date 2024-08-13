@@ -178,7 +178,7 @@ class Viaje{
         $cadena = "idviaje : ". $this->getidviaje(). "\t".
                 "Destino: ". $this->getvdestino(). "\n".
                 "Numero empleado Responsable: " . $this->getobjResponsable()->getrnumeroempleado()."\n".
-                "Nombre: " . $this->getobjResponsable()->getrnombre()." ".$this->getobjResponsable()->getrapellido()."\n".
+                "Nombre: " . $this->getobjResponsable()->getnombre()." ".$this->getobjResponsable()->getapellido()."\n".
                 "Cant Maxima Pasajeros: ". $this->getvcantmaxPasajeros(). "\t".
                 "Cantidad de pasajeros actual: " . $this->cantPasajeros(). "\n".
                 "Importe: ". $this->getvimporte() . "\tEmpresa: ". $this->getobjEmpresa()->getenombre(). 

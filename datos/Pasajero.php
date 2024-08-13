@@ -1,29 +1,20 @@
 <?php
-
-class Pasajero{
+include_once 'Persona.php';
+class Pasajero extends Persona{
 
     private $pdocumento;
-    private $pnombre;
-    private $papellido;
     private $ptelefono;
     private $idviaje;
     private $mensajeoperacion;
 
     //Metodo constructor de la clase
     public function __construct(){
-        $this->pnombre = "";
-        $this->papellido = "";
+        parent::__construct();
         $this->pdocumento = "";
         $this->ptelefono = 0;
         $this->idviaje = 0;
     }
     //Metodos de acceso a los datos de la clase
-    public function getpnombre(){
-        return $this->pnombre;
-    }
-    public function getpapellido(){
-        return $this->papellido;
-    }
     public function getpdocumento(){
         return $this->pdocumento;
     }
@@ -33,16 +24,7 @@ class Pasajero{
     public function getidviaje(){
         return $this->idviaje;
     }
-    public function getmensajeoperacion(){
-        return $this->mensajeoperacion;
-    }
     //Metodos de escritura de los atributos de la clase
-    public function setpnombre($nom){
-        $this->pnombre = $nom;
-    }
-    public function setpapellido($ape){
-        $this->papellido = $ape;
-    }
     public function setpdocumento($pdocumento){
         $this->pdocumento = $pdocumento;
     }
@@ -52,15 +34,12 @@ class Pasajero{
     public function setidviaje($var){
         $this->idviaje = $var;
     }
-    public function setmensajeoperacion($var){
-        $this->mensajeoperacion = $var;
-    }
     
     //Metodo para mostrar los datos de los atributos como string
     public function __toString(){
         $cadena = "";
-        $cadena = "Pasajero: ". $this->getpnombre()." ".$this->getpapellido()."\tDNI: ".$this->getpdocumento().
-        "\t Tel: ".$this->getptelefono() . 
+        $cadena = "Pasajero: ". $this->getnombre()." ".$this->getapellido()."\nDNI: ".$this->getpdocumento().
+        "\nTel: ".$this->getptelefono() . 
         "\n------------------------------------------\n";
         return $cadena;
     }
@@ -74,8 +53,8 @@ class Pasajero{
      */
     public function cargar($doc, $nom, $ape, $tel, $idviaje){
         $this->setpdocumento($doc);
-        $this->setpnombre($nom);
-        $this->setpapellido($ape);
+        $this->setnombre($nom);
+        $this->setapellido($ape);
         $this->setptelefono($tel);
         $this->setidviaje($idviaje);
     }
@@ -129,8 +108,8 @@ class Pasajero{
 			if($base->Ejecutar($consultaSQL)){
 				if($fila=$base->Registro()){					
 				    $this->setpdocumento($dni);
-					$this->setpnombre($fila['pnombre']);
-					$this->setpapellido($fila['papellido']);
+					$this->setnombre($fila['pnombre']);
+					$this->setapellido($fila['papellido']);
 					$this->setptelefono($fila['ptelefono']);
                     $this->setidviaje($fila['idviaje']);
 					$resp= true;
@@ -151,8 +130,8 @@ class Pasajero{
     public function insertar(){
 		$consultaSQL="INSERT INTO pasajero(pdocumento, pnombre, papellido, ptelefono, idviaje) 
 				VALUES (".$this->getpdocumento().",
-                '".$this->getpnombre()."',
-                '".$this->getpapellido()."',
+                '".$this->getnombre()."',
+                '".$this->getapellido()."',
                 ".$this->getptelefono().",
                 ".$this->getidviaje().")";	
 		return $this->realizarconsulta($consultaSQL);
@@ -165,8 +144,8 @@ class Pasajero{
      */
     public function modificar(){
 		$consultaSQL="UPDATE pasajero SET 
-                papellido = '".$this->getpapellido()."',
-                pnombre = '".$this->getpnombre()."',
+                papellido = '".$this->getapellido()."',
+                pnombre = '".$this->getnombre()."',
                 ptelefono = ".$this->getptelefono()." WHERE pdocumento = ". $this->getpdocumento();
 		return $this->realizarconsulta($consultaSQL);
 	}

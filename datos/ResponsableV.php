@@ -1,19 +1,15 @@
 <?php
-
-class ResponsableV{
+include_once 'Persona.php';
+class ResponsableV extends Persona{
 
     private $rnumeroempleado;
     private $rnumerolicencia;
-    private $rnombre;
-    private $rapellido;
-    private $mensajeoperacion;
 
     //Metodo constructor de la clase
     public function __construct(){
+        parent::__construct();
         $this->rnumeroempleado = "";
         $this->rnumerolicencia = "";
-        $this->rnombre = "";
-        $this->rapellido = "";
     }
     //Metodos de acceso a los datos de la clase
     public function getrnumeroempleado(){
@@ -22,12 +18,6 @@ class ResponsableV{
     public function getrnumerolicencia(){
         return $this->rnumerolicencia;
     }
-    public function getrnombre(){
-        return $this->rnombre;
-    }
-    public function getrapellido(){
-        return $this->rapellido;
-    }
     //Metodos de escritura de los atributos de la clase
     public function setrnumeroempleado($id){
         $this->rnumeroempleado = $id;
@@ -35,32 +25,18 @@ class ResponsableV{
     public function setrnumerolicencia($lic){
         $this->rnumerolicencia = $lic;
     }
-    public function setrnombre($nom){
-        $this->rnombre = $nom;
-    }
-    public function setrapellido($ape){
-        $this->rapellido = $ape;
-    }
 	public function cargar($id,$lic,$Nom,$Ape){		
 		$this->setrnumeroempleado($id);
         $this->setrnumerolicencia($lic);
-		$this->setrnombre($Nom);
-		$this->setrapellido($Ape);
+		$this->setnombre($Nom);
+		$this->setapellido($Ape);
     }
-	public function setmensajeoperacion($mensajeoperacion){
-		$this->mensajeoperacion=$mensajeoperacion;
-	}
-	public function getmensajeoperacion(){
-		return $this->mensajeoperacion ;
-	}
-
-
 
 
     //Metodo para mostrar los datos de los atributos como string
     public function __toString(){
         $cadena = "";
-        $cadena = "Responsable del viaje: ". $this->getrnombre()." ".$this->getrapellido().
+        $cadena = "Responsable del viaje: ". $this->getnombre()." ".$this->getapellido().
         "\tNro Empleado: ".$this->getrnumeroempleado().
         "\t Numero de licencia: ".$this->getrnumerolicencia().
         "\n-----------------------------------------------\n";
@@ -100,8 +76,8 @@ class ResponsableV{
 			if($base->Ejecutar($consultaSQL)){
 				if($fila=$base->Registro()){					
 				    $this->setrnumeroempleado($nro);
-					$this->setrnombre($fila['rnombre']);
-					$this->setrapellido($fila['rapellido']);
+					$this->setnombre($fila['rnombre']);
+					$this->setapellido($fila['rapellido']);
 					$this->setrnumerolicencia($fila['rnumerolicencia']);
 					$resp= true;
 				}						
@@ -122,8 +98,8 @@ class ResponsableV{
     public function insertar(){
 		$consultaSQL="INSERT INTO responsable(rnumerolicencia, rnombre, rapellido) 
 				VALUES (".$this->getrnumerolicencia().",
-                '".$this->getrnombre()."',
-                '".$this->getrapellido()."')";	
+                '".$this->getnombre()."',
+                '".$this->getapellido()."')";	
 		return $this->realizarconsulta($consultaSQL);
 	}
     /**
@@ -133,8 +109,8 @@ class ResponsableV{
     public function modificar(){
 		$consultaSQL = "UPDATE responsable SET 
                 rnumerolicencia = ".$this->getrnumerolicencia().",
-                rnombre = '".$this->getrnombre()."',
-                rapellido = '".$this->getrapellido()."' WHERE rnumeroempleado = ". $this->getrnumeroempleado();
+                rnombre = '".$this->getnombre()."',
+                rapellido = '".$this->getapellido()."' WHERE rnumeroempleado = ". $this->getrnumeroempleado();
 		return $this->realizarconsulta($consultaSQL);
 	}
 	
