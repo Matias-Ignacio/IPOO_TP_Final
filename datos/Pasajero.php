@@ -53,8 +53,8 @@ class Pasajero extends Persona{
      */
     public function cargar($doc, $nom, $ape, $tel, $idviaje){
         $this->setpdocumento($doc);
-        $this->setnombre($nom);
-        $this->setapellido($ape);
+        parent::setnombre($nom);        
+        parent::setapellido($ape);      
         $this->setptelefono($tel);
         $this->setidviaje($idviaje);
     }
@@ -71,10 +71,10 @@ class Pasajero extends Persona{
 			if($base->Ejecutar($consultaSQL)){
 			    $resp = true;
 			}else{
-				$this->setmensajeoperacion($base->getError());					
+				parent::setmensajeoperacion($base->getError());					
 			}
 		}else{
-			$this->setmensajeoperacion($base->getError());			
+			parent::setmensajeoperacion($base->getError());			
 		}
 		return $resp; 
     }
@@ -108,17 +108,17 @@ class Pasajero extends Persona{
 			if($base->Ejecutar($consultaSQL)){
 				if($fila=$base->Registro()){					
 				    $this->setpdocumento($dni);
-					$this->setnombre($fila['pnombre']);
-					$this->setapellido($fila['papellido']);
+					parent::setnombre($fila['pnombre']);    
+					parent::setapellido($fila['papellido']);  
 					$this->setptelefono($fila['ptelefono']);
                     $this->setidviaje($fila['idviaje']);
 					$resp= true;
 				}						
 		 	}	else {
-		 			$this->setmensajeoperacion($base->getError());		 		
+                    parent::setmensajeoperacion($base->getError());		 		
 			}
 		 }	else {
-		 		$this->setmensajeoperacion($base->getError());	 	
+                parent::setmensajeoperacion($base->getError());	 	
 		 }		
 		 return $resp;
 	}	
@@ -130,8 +130,8 @@ class Pasajero extends Persona{
     public function insertar(){
 		$consultaSQL="INSERT INTO pasajero(pdocumento, pnombre, papellido, ptelefono, idviaje) 
 				VALUES (".$this->getpdocumento().",
-                '".$this->getnombre()."',
-                '".$this->getapellido()."',
+                '".parent::getnombre()."',
+                '".parent::getapellido()."',
                 ".$this->getptelefono().",
                 ".$this->getidviaje().")";	
 		return $this->realizarconsulta($consultaSQL);
@@ -144,8 +144,8 @@ class Pasajero extends Persona{
      */
     public function modificar(){
 		$consultaSQL="UPDATE pasajero SET 
-                papellido = '".$this->getapellido()."',
-                pnombre = '".$this->getnombre()."',
+                papellido = '".parent::getapellido()."',
+                pnombre = '".parent::getnombre()."',
                 ptelefono = ".$this->getptelefono()." WHERE pdocumento = ". $this->getpdocumento();
 		return $this->realizarconsulta($consultaSQL);
 	}
@@ -184,10 +184,10 @@ class Pasajero extends Persona{
 					array_push($arregloPasajeros,$pasajero);	
 				}			
 		 	}else{
-		 		$this->setmensajeoperacion($base->getError());
+                parent::setmensajeoperacion($base->getError());
 			}
 		 }else{
-		 	$this->setmensajeoperacion($base->getError());
+		 	parent::setmensajeoperacion($base->getError());
 		 }	
 		 return $arregloPasajeros;
 	}

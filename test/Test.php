@@ -163,7 +163,7 @@ function inicializarViaje($objViajeActual){
     return $objViajeActual;
 }
 function mostrarViajeActual($objViaje){
-    echo "Viaje Actual... \n";
+    echo "\nViaje Actual... \n";
     echo $objViaje;
 }
 /**
@@ -209,12 +209,12 @@ function viajeBuscar(){
  * @param Empresa $objEmpresa
  */
 function viajeListar($objEmpresa){
-    echo "\n--------------- Lista de Viajes ----------------\n";
+    echo "\n\n--------------- Lista de Viajes ----------------\n";
     $colViajes = array();
     $nuevoViaje = new Viaje();
     $colViajes = $nuevoViaje->listar($objEmpresa);
     foreach ($colViajes as $viaje) {
-        echo $viaje;
+        echo $viaje . "\n";
     }
 }
 
@@ -248,7 +248,7 @@ function viajeModificar(){
         echo "Error en la busqueda...\n";
     }
     if ($nuevoViaje->modificar()){
-        echo "Viaje modificado con exito...\n";
+        echo "Viaje modificado con exito...\n\n";
     }else{
         echo "Error en la operacion " . $nuevoViaje->getmensajeoperacion() ."\n";
     }          
@@ -265,12 +265,12 @@ function viajeEliminar(){
     $pasajero = new Pasajero();
     $colPasajeros = $pasajero->listar($nro);
     if (count($colPasajeros)){
-        echo "No se puede eliminar, tiene pasajeros cargados\n";
+        echo "No se puede eliminar, tiene pasajeros cargados\n\n";
     }else{
         if ($nuevoViaje->eliminar()){
-            echo "Viaje eliminado con exito...\n";
+            echo "Viaje eliminado con exito...\n\n";
         }else{
-            echo "Error en la operacion " . $nuevoViaje->getmensajeoperacion() ."\n";
+            echo "Error en la operacion " . $nuevoViaje->getmensajeoperacion() ."\n\n";
         } 
     }   
 }
@@ -294,7 +294,7 @@ function pasajeroAgregar($objViaje){
         $nuevoPasajero->cargar($nro,$nom,$ape,$tel,$objViaje->getidviaje());
         if ($nuevoPasajero->insertar()){
             $objViaje->setAgregarPasajero($nuevoPasajero);
-            echo "Pasajero agregado con exito...\n";
+            echo "Pasajero agregado con exito...\n\n";
         }else{
             echo "Error en la operacion " . $nuevoPasajero->getmensajeoperacion() ."\n";
         }
@@ -326,7 +326,7 @@ function pasajeroListar($objViaje){
     $nuevoPasajero = new Pasajero();
     $colPasajeros = $nuevoPasajero->listar($objViaje->getidviaje());
     foreach ($colPasajeros as $pas) {
-        echo $pas;
+        echo $pas . "\n";
     }
 }
 /**
@@ -410,7 +410,7 @@ function responsableListar(){
     $nuevoResponsable = new ResponsableV();
     $colResponsables = $nuevoResponsable->listar();
     foreach ($colResponsables as $res) {
-        echo $res;
+        echo $res . "\n";
     }
 }
 /**
@@ -462,14 +462,14 @@ function seleccionarEmpresa(){
     echo "-------------------------------------------\n";
     empresaListar();
     $idEmpresa = readline("Seleccione la empresa Actual: ");
-    return $idEmpresa;
+    return $idEmpresa . "\n";
 }
 /**
  * Mostrar la empresa actual
  * @param Empresa $objEmpresa
  */
 function mostrarEmpresaActual($objEmpresa){
-    echo "\nEmpresa Actual... \n". $objEmpresa. "\n";
+    echo "\nEmpresa Actual... \n". $objEmpresa. "\n\n";
 }
 /**
  * Agregar una EMPRESA a la base de datos
@@ -508,8 +508,9 @@ function empresaListar(){
     $nuevaEmpresa = new Empresa();
     $colEmpresas = $nuevaEmpresa->listar();
     foreach ($colEmpresas as $emp) {
-        echo $emp;
+        echo $emp . "\n";
     }
+    echo  "\n";
 }
 /**
  * Modificar EMPRESA

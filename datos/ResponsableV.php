@@ -28,8 +28,8 @@ class ResponsableV extends Persona{
 	public function cargar($id,$lic,$Nom,$Ape){		
 		$this->setrnumeroempleado($id);
         $this->setrnumerolicencia($lic);
-		$this->setnombre($Nom);
-		$this->setapellido($Ape);
+		parent::setnombre($Nom);
+		parent::setapellido($Ape);
     }
 
 
@@ -55,10 +55,10 @@ class ResponsableV extends Persona{
 			if($base->Ejecutar($consultaSQL)){
 			    $resp = true;
 			}else{
-				$this->setmensajeoperacion($base->getError());					
+				parent::setmensajeoperacion($base->getError());					
 			}
 		}else{
-			$this->setmensajeoperacion($base->getError());			
+			parent::setmensajeoperacion($base->getError());			
 		}
 		return $resp; 
     }
@@ -76,16 +76,16 @@ class ResponsableV extends Persona{
 			if($base->Ejecutar($consultaSQL)){
 				if($fila=$base->Registro()){					
 				    $this->setrnumeroempleado($nro);
-					$this->setnombre($fila['rnombre']);
-					$this->setapellido($fila['rapellido']);
+					parent::setnombre($fila['rnombre']);
+					parent::setapellido($fila['rapellido']);
 					$this->setrnumerolicencia($fila['rnumerolicencia']);
 					$resp= true;
 				}						
 		 	}	else {
-		 			$this->setmensajeoperacion($base->getError());		 		
+		 			parent::setmensajeoperacion($base->getError());		 		
 			}
 		 }	else {
-		 		$this->setmensajeoperacion($base->getError());	 	
+		 		parent::setmensajeoperacion($base->getError());	 	
 		 }		
 		 return $resp;
 	}	
@@ -98,8 +98,8 @@ class ResponsableV extends Persona{
     public function insertar(){
 		$consultaSQL="INSERT INTO responsable(rnumerolicencia, rnombre, rapellido) 
 				VALUES (".$this->getrnumerolicencia().",
-                '".$this->getnombre()."',
-                '".$this->getapellido()."')";	
+                '".parent::getnombre()."',
+                '".parent::getapellido()."')";	
 		return $this->realizarconsulta($consultaSQL);
 	}
     /**
@@ -109,8 +109,8 @@ class ResponsableV extends Persona{
     public function modificar(){
 		$consultaSQL = "UPDATE responsable SET 
                 rnumerolicencia = ".$this->getrnumerolicencia().",
-                rnombre = '".$this->getnombre()."',
-                rapellido = '".$this->getapellido()."' WHERE rnumeroempleado = ". $this->getrnumeroempleado();
+                rnombre = '".parent::getnombre()."',
+                rapellido = '".parent::getapellido()."' WHERE rnumeroempleado = ". $this->getrnumeroempleado();
 		return $this->realizarconsulta($consultaSQL);
 	}
 	
@@ -146,10 +146,10 @@ class ResponsableV extends Persona{
 					array_push($arregloResponsable, $responsable);	
 				}			
 		 	}else{
-		 		$this->setmensajeoperacion($base->getError());
+		 		parent::setmensajeoperacion($base->getError());
 			}
 		 }else{
-		 	$this->setmensajeoperacion($base->getError());
+		 	parent::setmensajeoperacion($base->getError());
 		 }	
 		 return $arregloResponsable;
 	}
