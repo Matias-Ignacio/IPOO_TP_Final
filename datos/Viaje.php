@@ -177,7 +177,7 @@ class Viaje{
         $cadena = "";
         $cadena = "idviaje : ". $this->getidviaje(). "\t".
                 "Destino: ". $this->getvdestino(). "\n".
-                "Numero empleado Responsable: " . $this->getobjResponsable()->getrnumeroempleado()."\n".
+                "Numero empleado Responsable: " . $this->getobjResponsable()->getpdocumento()."\n".
                 "Nombre: " . $this->getobjResponsable()->getnombre()." ".$this->getobjResponsable()->getapellido()."\n".
                 "Cant Maxima Pasajeros: ". $this->getvcantmaxPasajeros(). "\t".
                 "Cantidad de pasajeros actual: " . $this->cantPasajeros(). "\n".
@@ -225,7 +225,7 @@ class Viaje{
 					$this->setvcantmaxpasajeros($registro['vcantmaxpasajeros']);
                     $objEmp->Buscar($registro['idempresa']);
 					$this->setobjEmpresa($objEmp);
-                    $objResp->Buscar($registro['rnumeroempleado']);
+                    $objResp->Buscar($registro['pdocumento']);
                     $this->setobjResponsable($objResp);
                     $this->setvimporte($registro['vimporte']);
 					$resp= true;
@@ -244,11 +244,11 @@ class Viaje{
      */
     public function insertar(){
 
-		$consultaSQL="INSERT INTO viaje(vdestino, vcantmaxpasajeros, idempresa, rnumeroempleado, vimporte) 
+		$consultaSQL="INSERT INTO viaje(vdestino, vcantmaxpasajeros, idempresa, pdocumento, vimporte) 
 				VALUES ('".$this->getvdestino()."',
                 ".$this->getvcantmaxPasajeros().",
                 ".$this->getobjEmpresa()->getidempresa().",
-                ".$this->getobjResponsable()->getrnumeroempleado().",
+                ".$this->getobjResponsable()->getpdocumento().",
                 ".$this->getvimporte().")";	
 		return $this->realizarconsulta($consultaSQL);
 	}
@@ -262,7 +262,7 @@ class Viaje{
                 vdestino = '".$this->getvdestino()."',
                 vcantmaxpasajeros = ".$this->getvcantmaxPasajeros().",
                 idempresa = ".$this->getobjEmpresa()->getidempresa().",
-                rnumeroempleado = ".$this->getobjResponsable()->getrnumeroempleado().",
+                pdocumento = ".$this->getobjResponsable()->getpdocumento().",
                 vimporte = ".$this->getvimporte()." WHERE idviaje = ". $this->getidviaje();
 		return $this->realizarconsulta($consultaSQL);
 	}
@@ -296,7 +296,7 @@ class Viaje{
 					$des = $registro['vdestino'];
 					$cmp = $registro['vcantmaxpasajeros'];
                     $objEmp->Buscar($registro['idempresa']);
-					$objResp->Buscar($registro['rnumeroempleado']);                  
+					$objResp->Buscar($registro['pdocumento']);                  
                     $imp = $registro['vimporte'];				
 					$viaje=new Viaje();
 					$viaje->cargar($id, $des, $cmp, $objEmp, $objResp, $imp);

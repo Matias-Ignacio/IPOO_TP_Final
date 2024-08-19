@@ -25,11 +25,10 @@ class ResponsableV extends Persona{
     public function setrnumerolicencia($lic){
         $this->rnumerolicencia = $lic;
     }
-	public function cargar($id,$lic,$Nom,$Ape){		
+	public function cargarRe($doc, $Nom, $Ape, $tel, $id, $lic){	
+		parent::cargar($doc, $Nom, $Ape, $tel);	
 		$this->setrnumeroempleado($id);
         $this->setrnumerolicencia($lic);
-		parent::setnombre($Nom);
-		parent::setapellido($Ape);
     }
 
 
@@ -39,7 +38,7 @@ class ResponsableV extends Persona{
         $cadena = "Responsable del viaje: ". parent::__toString() .
         "\nNro Empleado: ".$this->getrnumeroempleado().
         "\nNumero de licencia: ".$this->getrnumerolicencia().
-        "\n-----------------------------------------------\n";
+        "\n-----------------------*------------------------\n";
         return $cadena;
     }
 
@@ -55,10 +54,10 @@ class ResponsableV extends Persona{
 			if($base->Ejecutar($consultaSQL)){
 			    $resp = true;
 			}else{
-				parent::setmensajeoperacion($base->getError());					
+				$this->setmensajeoperacion($base->getError());					
 			}
 		}else{
-			parent::setmensajeoperacion($base->getError());			
+			$this->setmensajeoperacion($base->getError());			
 		}
 		return $resp; 
     }
@@ -68,24 +67,23 @@ class ResponsableV extends Persona{
 	 * @param int $nro
 	 * @return true en caso de encontrar los datos, false en caso contrario 
 	 */		
-    public function Buscar($nro){
+    public function Buscar($dni){
 		$base=new BaseDatos();
-		$consultaSQL="Select * from responsable where rnumeroempleado=".$nro;
+		$consultaSQL="Select * from responsable where pdocumento=".$dni;
 		$resp= false;
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaSQL)){
-				if($fila=$base->Registro()){					
-				    $this->setrnumeroempleado($nro);
-					parent::setnombre($fila['rnombre']);
-					parent::setapellido($fila['rapellido']);
+				if($fila=$base->Registro()){		
+					parent::Buscar($dni);			
+					$this->setrnumeroempleado($fila['rnumeroempleado']);
 					$this->setrnumerolicencia($fila['rnumerolicencia']);
 					$resp= true;
 				}						
 		 	}	else {
-		 			parent::setmensajeoperacion($base->getError());		 		
+		 			$this->setmensajeoperacion($base->getError());		 		
 			}
 		 }	else {
-		 		parent::setmensajeoperacion($base->getError());	 	
+		 		$this->setmensajeoperacion($base->getError());	 	
 		 }		
 		 return $resp;
 	}	
@@ -96,21 +94,26 @@ class ResponsableV extends Persona{
      * @return boolean
      */
     public function insertar(){
-		$consultaSQL="INSERT INTO responsable(rnumerolicencia, rnombre, rapellido) 
-				VALUES (".$this->getrnumerolicencia().",
-                '".parent::getnombre()."',
-                '".parent::getapellido()."')";	
+		if (parent::insertarPe()){
+			$consultaSQL="INSERT INTO responsable(pdocumento, rnumeroempleado, rnumerolicencia) 
+					VALUES (".$this->getpdocumento().",
+					".$this->getrnumeroempleado().",
+					".$this->getrnumerolicencia().")";	
+		}
 		return $this->realizarconsulta($consultaSQL);
 	}
+
     /**
      * Modificar un pasajero en la BD
      * @return boolean
      */
     public function modificar(){
-		$consultaSQL = "UPDATE responsable SET 
-                rnumerolicencia = ".$this->getrnumerolicencia().",
-                rnombre = '".parent::getnombre()."',
-                rapellido = '".parent::getapellido()."' WHERE rnumeroempleado = ". $this->getrnumeroempleado();
+		if (parent::modificar()){
+			$consultaSQL = "UPDATE responsable SET 
+                rnumeroempleado = ".$this->getrnumeroempleado().",
+                rnumerolicencia = ".$this->getrnumerolicencia()."
+                WHERE pdocumento = ". $this->getpdocumento();
+		}
 		return $this->realizarconsulta($consultaSQL);
 	}
 	
@@ -119,37 +122,38 @@ class ResponsableV extends Persona{
      * @return boolean
      */
 	public function eliminar(){
-        $consultaSQL = "DELETE FROM responsable WHERE rnumeroempleado=".$this->getrnumeroempleado();
-		return $this->realizarconsulta($consultaSQL);
+        $consultaSQL = "DELETE FROM responsable WHERE pdocumento=".$this->getpdocumento();
+		$this->realizarconsulta($consultaSQL);
+		return parent::eliminar();
 	}
 
     /**
      * Devuelve un array con la coleccion de Responsables
+	 * @param string
      * @return array
      */
-	public static function listar(){
+	public function listar($condicion=""){
 	    $arregloResponsable = null;
 		$base = new BaseDatos();
-		$consultaSQL = "SELECT * FROM responsable  ORDER BY rapellido ";
+		$consultaSQL = "SELECT * FROM responsable ";
+		if ($condicion != ""){
+			$consultaSQL = $consultaSQL . " WHERE " . $condicion;
+		} 
+		$consultaSQL .=  " ORDER BY pdocumento;";
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaSQL)){				
 				$arregloResponsable = array();
 				while($registro = $base->Registro()){
-					
-					$nro = $registro['rnumeroempleado'];
-					$lic = $registro['rnumerolicencia'];
-					$nom = $registro['rnombre'];
-					$ape = $registro['rapellido'];
 				
 					$responsable = new ResponsableV();
-					$responsable->cargar($nro, $lic, $nom, $ape);
+					$responsable->Buscar($registro['pdocumento']);
 					array_push($arregloResponsable, $responsable);	
 				}			
 		 	}else{
-		 		parent::setmensajeoperacion($base->getError());
+		 		$this->setmensajeoperacion($base->getError());
 			}
 		 }else{
-		 	parent::setmensajeoperacion($base->getError());
+		 	$this->setmensajeoperacion($base->getError());
 		 }	
 		 return $arregloResponsable;
 	}

@@ -1,36 +1,19 @@
 <?php
 include_once 'Persona.php';
 class Pasajero extends Persona{
-
-    private $pdocumento;
-    private $ptelefono;
-    private $idviaje;
+     private $idviaje;
     private $mensajeoperacion;
 
     //Metodo constructor de la clase
     public function __construct(){
         parent::__construct();
-        $this->pdocumento = "";
-        $this->ptelefono = 0;
         $this->idviaje = 0;
     }
     //Metodos de acceso a los datos de la clase
-    public function getpdocumento(){
-        return $this->pdocumento;
-    }
-    public function getptelefono(){
-        return $this->ptelefono;
-    }
     public function getidviaje(){
         return $this->idviaje;
     }
     //Metodos de escritura de los atributos de la clase
-    public function setpdocumento($pdocumento){
-        $this->pdocumento = $pdocumento;
-    }
-    public function setptelefono($tel){
-        $this->ptelefono = $tel;
-    }
     public function setidviaje($var){
         $this->idviaje = $var;
     }
@@ -38,24 +21,17 @@ class Pasajero extends Persona{
     //Metodo para mostrar los datos de los atributos como string
     public function __toString(){
         $cadena = "";
-        $cadena = "Pasajero: ". parent::__toString() ."\nDNI: ".$this->getpdocumento().
-        "\nTel: ".$this->getptelefono() . 
+        $cadena = "Pasajero: ". parent::__toString() .
         "\n------------------------------------------\n";
         return $cadena;
     }
     /**
      * Caragr los datos del pasajero
      * @param $doc
-     * @param $nom
-     * @param $ape
-     * @param $tel
      * @param $idviaje
      */
-    public function cargar($doc, $nom, $ape, $tel, $idviaje){
-        $this->setpdocumento($doc);
-        parent::setnombre($nom);        
-        parent::setapellido($ape);      
-        $this->setptelefono($tel);
+    public function cargarPa($doc, $nom, $ape, $tel, $idviaje){
+        parent::cargar($doc, $nom, $ape, $tel);
         $this->setidviaje($idviaje);
     }
 
@@ -71,10 +47,10 @@ class Pasajero extends Persona{
 			if($base->Ejecutar($consultaSQL)){
 			    $resp = true;
 			}else{
-				parent::setmensajeoperacion($base->getError());					
+				$this->setmensajeoperacion($base->getError());					
 			}
 		}else{
-			parent::setmensajeoperacion($base->getError());			
+			$this->setmensajeoperacion($base->getError());			
 		}
 		return $resp; 
     }
@@ -107,18 +83,15 @@ class Pasajero extends Persona{
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaSQL)){
 				if($fila=$base->Registro()){					
-				    $this->setpdocumento($dni);
-					parent::setnombre($fila['pnombre']);    
-					parent::setapellido($fila['papellido']);  
-					$this->setptelefono($fila['ptelefono']);
+				    parent::Buscar($dni);   
                     $this->setidviaje($fila['idviaje']);
 					$resp= true;
 				}						
 		 	}	else {
-                    parent::setmensajeoperacion($base->getError());		 		
+                    $this->setmensajeoperacion($base->getError());		 		
 			}
 		 }	else {
-                parent::setmensajeoperacion($base->getError());	 	
+                $this->setmensajeoperacion($base->getError());	 	
 		 }		
 		 return $resp;
 	}	
@@ -128,12 +101,11 @@ class Pasajero extends Persona{
      * @return boolean
      */
     public function insertar(){
-		$consultaSQL="INSERT INTO pasajero(pdocumento, pnombre, papellido, ptelefono, idviaje) 
+        if (parent::insertarPe()){
+		$consultaSQL="INSERT INTO pasajero(pdocumento, idviaje) 
 				VALUES (".$this->getpdocumento().",
-                '".parent::getnombre()."',
-                '".parent::getapellido()."',
-                ".$this->getptelefono().",
                 ".$this->getidviaje().")";	
+        }           
 		return $this->realizarconsulta($consultaSQL);
 	}
 
@@ -143,11 +115,11 @@ class Pasajero extends Persona{
      * @return boolean
      */
     public function modificar(){
-		$consultaSQL="UPDATE pasajero SET 
-                papellido = '".parent::getapellido()."',
-                pnombre = '".parent::getnombre()."',
-                ptelefono = ".$this->getptelefono()." WHERE pdocumento = ". $this->getpdocumento();
-		return $this->realizarconsulta($consultaSQL);
+        /*if (parent::modificar()){
+		$consultaSQL="UPDATE pasajero SET WHERE pdocumento = ". $this->getpdocumento();
+        }
+        return $this->realizarconsulta($consultaSQL);*/
+        return parent::modificar();
 	}
 	
     /**
@@ -156,7 +128,8 @@ class Pasajero extends Persona{
      */
 	public function eliminar(){
         $consultaSQL = "DELETE FROM pasajero WHERE pdocumento=".$this->getpdocumento();
-		return $this->realizarconsulta($consultaSQL);
+        $this->realizarconsulta($consultaSQL);
+        return parent::eliminar();
 	}
 
     /**
@@ -168,26 +141,20 @@ class Pasajero extends Persona{
 	public function listar($idviaje){
 	    $arregloPasajeros = null;
 		$base = new BaseDatos();
-		$consultaSQL = "SELECT * FROM pasajero WHERE idviaje = " . $idviaje." ORDER BY papellido ";
+		$consultaSQL = "SELECT * FROM pasajero WHERE idviaje = " . $idviaje; //." ORDER BY papellido ";
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaSQL)){				
 				$arregloPasajeros = array();
 				while($registro = $base->Registro()){
-					
-					$NroDoc = $registro['pdocumento'];
-					$Nombre = $registro['pnombre'];
-					$Apellido = $registro['papellido'];
-					$Telefono = $registro['ptelefono'];
-				
 					$pasajero=new Pasajero();
-					$pasajero->cargar($NroDoc,$Nombre,$Apellido,$Telefono, $idviaje);
+                    $pasajero->Buscar($registro['pdocumento']);
 					array_push($arregloPasajeros,$pasajero);	
 				}			
 		 	}else{
-                parent::setmensajeoperacion($base->getError());
+                $this->setmensajeoperacion($base->getError());
 			}
 		 }else{
-		 	parent::setmensajeoperacion($base->getError());
+            $this->setmensajeoperacion($base->getError());
 		 }	
 		 return $arregloPasajeros;
 	}

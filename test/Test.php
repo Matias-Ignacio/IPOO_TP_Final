@@ -176,7 +176,7 @@ function viajeAgregar(){
     $objEmp->Buscar($GLOBALS["idEmpresaActual"]);
     $objResp = new ResponsableV();
     $des = readline("Destino: ");
-    $res = readline("Nro Empleado Responsable: ");
+    $res = readline("DNI Empleado Responsable: ");
     $objResp->Buscar($res);
     $max = readline("Cantidad maxima de pasajeros: ");
     $imp = readline("Importe del viaje: ");
@@ -291,7 +291,7 @@ function pasajeroAgregar($objViaje){
         $ape = readline("Apellido: ");
         $nro = readline("D.N.I.: ");
         $tel = readline("Telefono: ");
-        $nuevoPasajero->cargar($nro,$nom,$ape,$tel,$objViaje->getidviaje());
+        $nuevoPasajero->cargarPa($nro,$nom,$ape,$tel,$objViaje->getidviaje());
         if ($nuevoPasajero->insertar()){
             $objViaje->setAgregarPasajero($nuevoPasajero);
             echo "Pasajero agregado con exito...\n\n";
@@ -309,8 +309,8 @@ function pasajeroAgregar($objViaje){
 function pasajeroBuscar(){
     echo "\n----- Busccar un Pasajero -----\n";
     $nuevoPasajero = new Pasajero();
-    $id = readline("Dni de pasajero: ");
-    if ($nuevoPasajero->Buscar($id)){
+    $dni = readline("Dni de pasajero: ");
+    if ($nuevoPasajero->Buscar($dni)){
         echo $nuevoPasajero;
     }else{
         echo "Error en la busqueda...\n";
@@ -378,10 +378,13 @@ function pasajeroEliminar(){
 function responsableAgregar(){
     echo "\n----- Agregar un Responsable de Viaje -----\n";
     $nuevoResponsable = new ResponsableV();
+    $doc = readline("DNI: ");
     $nom = readline("Nombre: ");
     $ape = readline("Apellido: ");
-    $nro = readline("Nro Licencia: ");
-    $nuevoResponsable->cargar(0, $nro, $nom, $ape);
+    $tel = readline("Telefono: ");
+    $id = readline("Id Empleado: ");
+    $lic = readline("Nro Licencia: ");
+    $nuevoResponsable->cargarRe($doc, $nom, $ape, $tel, $id, $lic);
     if ($nuevoResponsable->insertar()){
         echo "Responsable agregado con exito...\n";
     }else{
@@ -394,8 +397,8 @@ function responsableAgregar(){
 function responsableBuscar(){
     echo "\n----- Busccar un Responsable -----\n";
     $nuevoResponsable = new ResponsableV();
-    $id = readline("Nro del Responsable: ");
-    if ($nuevoResponsable->Buscar($id)){
+    $dni = readline("DNI del Responsable: ");
+    if ($nuevoResponsable->Buscar($dni)){
         echo $nuevoResponsable;
     }else{
         echo "Error en la busqueda...\n";
@@ -408,7 +411,7 @@ function responsableListar(){
     $colResponsables = array();
     echo "\n------------ Lista de responsables ------------\n";
     $nuevoResponsable = new ResponsableV();
-    $colResponsables = $nuevoResponsable->listar();
+    $colResponsables = $nuevoResponsable->listar("");
     foreach ($colResponsables as $res) {
         echo $res . "\n";
     }
@@ -419,7 +422,7 @@ function responsableListar(){
 function responsableModificar(){
     $nuevoRes = new ResponsableV();
     echo "\n----- Modificar un Responsable de viajes -----\n";
-    $var = readline("Nro Empleado: ");
+    $var = readline("DNI Empleado: ");
     if ($nuevoRes->Buscar($var)){
         $var = readline("Nombre: ".$nuevoRes->getnombre()." (ENTER no modifica) ");
         if(!($var == "")){
@@ -444,9 +447,9 @@ function responsableModificar(){
  */
 function responsableEliminar(){
     echo "\nEliminar Responsable de viajes: -----------\n";
-    $nro = readline("Número de empleado: ");
+    $dni = readline("DNI empleado: ");
     $nuevoResponsable = new ResponsableV();
-    $nuevoResponsable->setrnumeroempleado($nro);
+    $nuevoResponsable->setpdocumento($dni);
     if ($nuevoResponsable->eliminar()){
         echo "Responsable eliminado con exito...\n";
     }else{
