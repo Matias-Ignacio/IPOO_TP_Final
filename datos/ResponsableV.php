@@ -94,7 +94,7 @@ class ResponsableV extends Persona{
      * @return boolean
      */
     public function insertar(){
-		if (parent::insertarPe()){
+		if (parent::insertar()){
 			$consultaSQL="INSERT INTO responsable(pdocumento, rnumeroempleado, rnumerolicencia) 
 					VALUES (".$this->getpdocumento().",
 					".$this->getrnumeroempleado().",

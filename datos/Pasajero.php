@@ -101,7 +101,7 @@ class Pasajero extends Persona{
      * @return boolean
      */
     public function insertar(){
-        if (parent::insertarPe()){
+        if (parent::insertar()){
 		$consultaSQL="INSERT INTO pasajero(pdocumento, idviaje) 
 				VALUES (".$this->getpdocumento().",
                 ".$this->getidviaje().")";	

@@ -121,7 +121,7 @@ class Persona{
      * Insertar persona en la BD
      * @return boolean
      */
-    public function insertarPe(){
+    public function insertar(){
 		$consultaSQL="INSERT INTO persona(pdocumento, pnombre, papellido, ptelefono) 
 				VALUES (".$this->getpdocumento().",
                 '".$this->getnombre()."',
